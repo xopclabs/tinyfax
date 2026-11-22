@@ -1,8 +1,8 @@
 # tinyfax
 
 - Start with the [README](README.md) for project scope and the documentation index.
-- Before changing architecture or requirements, read [design decisions and boundaries](docs/design/01-decisions-and-boundaries.md) and the relevant design chapter. Preserve the decision labels: preferred, illustrative, and open details are not requirements or a wire specification. Confirm unresolved choices before relying on them in implementation.
-- Before making claims about tested hardware, firmware, or printer behavior, check [current project state](docs/status/CURRENT_STATE.md). Record new verification there, with the test conditions and outcome; keep proposals in `docs/design/`.
+- Before changing architecture or requirements, read the [product contract](docs/product.md) and the relevant reference from the README. Confirm [unresolved choices](docs/unresolved.md) before relying on them in implementation. Examples are not protocol specifications.
+- Before making claims about tested hardware, firmware, or printer behavior, check the dated snapshots in [status/](status/). Record new verification in a dated snapshot with the test conditions and outcome. Keep proposals in `docs/`.
 - Keep real credentials, private keys, and enrollment tokens out of Git. Use placeholders in examples.
 
 ## Writing

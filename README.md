@@ -1,41 +1,24 @@
 # tinyfax
 
-A private, invitation-only network of autonomous thermal printers. A person sends a text or image from a browser; another person's physical printer produces it as paper. The system should feel like a tiny, friendly fax network rather than a messaging app.
+tinyfax is a private network of thermal printers. A member sends a text or image from a browser; the recipient's printer produces it on paper. Each printer has an ESP32-S3, Wi-Fi, and a PeriPage P21 connected over USB. A managed MQTT broker carries messages between households. Sending does not require the sender's printer to be online.
 
-This repository is **design and context documentation**, not an implementation plan. It consolidates the decisions and discussions that preceded software development. It deliberately distinguishes **agreed direction**, **working assumptions**, **illustrative design**, **open questions**, and **verified current state**.
+These files describe the intended system, not a claim that the software is implemented. The only dated account of tested work is [the November 2026 status snapshot](status/2026-11-21.md). Where a wire format, provider, policy, or hardware property remains undetermined, the documentation says so. Do not infer one from an example.
 
-## The idea in one paragraph
+## Reference map
 
-Each participant owns a PeriPage P21 (or compatible printer) containing a cheap ESP32-S3. The ESP32 joins home Wi-Fi, connects outbound to a managed MQTT broker, receives jobs, and prints over USB. People compose messages in a public, *static* web application that talks to MQTT over secure WebSockets. The web app can be used anywhere; the sender's printer need not be online. Each printer is the authority for its own encryption key and which browser signing keys may act for its owner. The broker routes and may queue messages, while the ESP32 provides local setup, recovery, and printing. Nothing in the production messaging path should depend on the creator's VPS.
+| Read | For |
+| --- | --- |
+| [Product contract](docs/product.md) | Required experience, scope, and operators |
+| [System boundaries](docs/architecture.md) | Components and normal message path |
+| [MQTT transport](docs/mqtt.md) | Session semantics, topics, broker permissions, delivery limits |
+| [Print jobs](docs/print-jobs.md) | Raster data, transfer options, printing and deduplication |
+| [Identity and cryptography](docs/identity.md) | Key roles, authentication, E2EE, signing, trust |
+| [Membership and enrollment](docs/enrollment.md) | New printers, new browsers, recovery and revocation |
+| [Browser application](docs/browser.md) | Public static sender, local storage and enrollment UX |
+| [Local device management](docs/device-management.md) | AP behavior, Wi-Fi recovery, settings, blocklists |
+| [Flash and OTA](docs/firmware-and-storage.md) | Persistence requirements, partitions, updates and rollback |
+| [P21 integration](docs/hardware.md) | USB, keepalive, power and physical constraints |
+| [Architecture rationale](docs/design-record.md) | Reasons behind the principal boundaries |
+| [Unspecified interfaces](docs/unresolved.md) | Choices that must not be fabricated by an implementing agent |
 
-## Read this first
-
-| Document | Purpose |
-|---|---|
-| [Design decisions](docs/design/01-decisions-and-boundaries.md) | Agreed requirements, explicit non-goals, and strength of each decision |
-| [System architecture](docs/design/02-system-architecture.md) | Components, responsibilities, and end-to-end flows |
-| [MQTT network](docs/design/03-mqtt-network.md) | Routing, ACLs, persistent sessions, presence, and receipts |
-| [Print jobs and data](docs/design/04-print-jobs-and-transport.md) | Image format, sizes, chunking options, delivery semantics |
-| [Identity and cryptography](docs/design/05-identity-and-cryptography.md) | Key roles, encryption, signatures, trust assumptions |
-| [Enrollment and membership](docs/design/06-enrollment-and-membership.md) | Adding people and browsers without manual key approval |
-| [Local management and recovery](docs/design/07-local-management-and-recovery.md) | AP behavior, Wi-Fi changes, browser reset/revocation, blocklists |
-| [Firmware, persistence and OTA](docs/design/08-firmware-storage-and-ota.md) | Persistent identity, partitions, updates and rollback |
-| [Browser applications](docs/design/09-browser-applications.md) | Static composer, browser storage, local administrative UI |
-| [Hardware and printer integration](docs/design/10-hardware-and-printer.md) | ESP32-S3, P21 USB, power, and physical assumptions |
-| [Alternatives considered](docs/design/11-alternatives-considered.md) | P2P, centralized server, Telegram, BLE, Zigbee, failover |
-| [Unresolved details](docs/design/12-open-questions.md) | Areas where the discussion did not establish a protocol or final choice |
-| [Current project state](docs/status/CURRENT_STATE.md) | **What has actually been purchased, tested, and verified** |
-
-## Decision notation
-
-- **Agreed** — a design direction explicitly accepted in the conversation.
-- **Preferred** — a leading approach, but not a finalized protocol or service selection.
-- **Illustrative** — example topics, structures, durations, sizes, or workflows; not a wire-level specification.
-- **Open** — not decided and should not be silently treated as fixed.
-- **Verified** — reported as already tested or completed, recorded only in the status document.
-
-## Scope and authority
-
-The initial audience is the creator and a small group of friends, including a couple receiving printers as gifts. Membership is provisioned by the creator, not open self-registration. Device owners can independently add and remove their browser clients and administer their own printer. The architecture should permit adding more friends later without reconfiguring existing printers by hand.
-
-This documentation is intentionally descriptive. It does **not** prescribe a task sequence, a sprint plan, a particular codebase layout, or detailed implementation APIs. Its purpose is to provide a reliable foundation for further design work with a local agent.
+The canonical definitions are in the named references. Other documents link to them instead of repeating their schemas or rules. Example MQTT topics, JSON snippets, and storage layouts are *illustrations*, not protocol specifications.
