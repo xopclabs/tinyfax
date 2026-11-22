@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Local test scripts and state
+/.scratch/
+
 # Editor and OS artifacts
 *.swp
 *~

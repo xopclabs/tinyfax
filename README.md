@@ -2,12 +2,13 @@
 
 tinyfax is a private network of thermal printers. A member sends a text or image from a browser; the recipient's printer produces it on paper. Each printer has an ESP32-S3, Wi-Fi, and a PeriPage P21 connected over USB. A managed MQTT broker carries messages between households. Sending does not require the sender's printer to be online.
 
-These files describe the intended system, not a claim that the software is implemented. The only dated account of tested work is [the November 2026 status snapshot](status/2026-11-21.md). Where a wire format, provider, policy, or hardware property remains undetermined, the documentation says so. Do not infer one from an example.
+The [roadmap](docs/roadmap.md) tracks progress. [OpenSpec changes](openspec/changes/) hold implementation tasks and verification results. The references below describe the intended system. Do not infer unspecified formats or policies from examples.
 
 ## Reference map
 
 | Read | For |
 | --- | --- |
+| [Roadmap](docs/roadmap.md) | Milestones and steps before the two-household pilot |
 | [Product contract](docs/product.md) | Required experience, scope, and operators |
 | [System boundaries](docs/architecture.md) | Components and normal message path |
 | [MQTT transport](docs/mqtt.md) | Session semantics, topics, broker permissions, delivery limits |

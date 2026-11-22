@@ -27,4 +27,4 @@ A firmware update must not destroy the decryption key or broker identity: doing 
 
 ## Low-cost P21 USB hardware is the baseline
 
-The PeriPage P21 is driven from the ESP32-S3 over USB, with a USB keepalive mechanism. Cheap ESP32-S3 boards are preferred over higher-priced boards where the necessary features fit. Zigbee and Bluetooth are not required for the product's normal print path. See [hardware](hardware.md) and the [dated hardware report](../status/2026-11-21.md).
+The PeriPage P21 is driven from the ESP32-S3 over USB, with a USB keepalive mechanism. Cheap ESP32-S3 boards are preferred over higher-priced boards where the necessary features fit. Zigbee and Bluetooth are not required for the product's normal print path. See [hardware](hardware.md).

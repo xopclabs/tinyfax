@@ -1,6 +1,6 @@
 # PeriPage P21 and ESP32-S3 integration
 
-Tested physical observations are recorded in [the dated status snapshot](../status/2026-11-21.md).
+In November 2026, the project owner reported printing to the P21 over USB from an ESP32-S3 breadboard prototype and testing a USB keepalive. That report did not verify a permanent assembly, power cycling, USB reconnection, or the supply and charging path.
 
 ## Assembly model
 
