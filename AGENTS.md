@@ -5,6 +5,10 @@
 - Before making claims about tested hardware, firmware, or printer behavior, check [current project state](docs/status/CURRENT_STATE.md). Record new verification there, with the test conditions and outcome; keep proposals in `docs/design/`.
 - Keep real credentials, private keys, and enrollment tokens out of Git. Use placeholders in examples.
 
+## Writing
+
+Before drafting or revising user-facing prose for this project, read `~/.pi/agent/skills/unslop/SKILL.md` and apply its rules.
+
 ## Design → specify → implement
 
 1. **Design:** When starting a design discussion, suggest that the user run `/skill:grill-with-docs`. This skill requires manual invocation.
