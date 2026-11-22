@@ -1,0 +1,6 @@
+{
+  "name": "tinyfax-mqtt-test",
+  "private": true,
+  "scripts": { "start": "node server.cjs" },
+  "dependencies": { "mqtt": "5.15.1" }
+}

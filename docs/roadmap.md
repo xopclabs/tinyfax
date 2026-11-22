@@ -10,7 +10,7 @@ The milestones below describe what to deliver and how to verify it. Use OpenSpec
 
 ## 2. Send real messages without paper
 
-1. [ ] **Build the browser-to-ESP32 test path.** Send a fixed payload through the selected broker. Verify online and offline delivery and distinguish broker acknowledgment from device receipt.
+1. [x] **Build the browser-to-ESP32 test path.** Send a fixed payload through the selected broker. Verify online and offline delivery and distinguish broker acknowledgment from device receipt.
 2. [ ] **Build secure job acceptance.** Define topic permissions, the member and key directory, and the signed, encrypted job format. Provision test identities by hand. Verify that the receiver rejects invalid and unauthorized jobs and does not accept a duplicate after reboot.
 3. [ ] **Deploy the sender.** Add recipient selection, browser credential storage, text and image composition, raster preview, and send feedback. Send both text and an image to a remote ESP32 with the sender's ESP32 off. The receiver records the accepted raster without a printer attached.
 
