@@ -1,0 +1,13 @@
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Editor and OS artifacts
+*.swp
+*~
+.DS_Store
+
+# Nix build symlinks
+/result
+/result-*
