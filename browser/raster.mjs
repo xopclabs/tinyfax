@@ -52,8 +52,9 @@ export function composeRaster(text, image) {
     const textHeight = lines.length ? lines.length * 20 + 16 : 0;
     const maxHeight = Math.floor((MAX_RASTER - 4) / (WIDTH / 8));
     if (textHeight >= maxHeight || (!text && !image)) throw new RangeError('Add content within the raster limit.');
-    const scale = image ? Math.min(1, WIDTH / image.width, (maxHeight - textHeight) / image.height) : 0;
+    const scale = image ? WIDTH / image.width : 0;
     const imageHeight = image ? Math.max(1, Math.floor(image.height * scale)) : 0;
+    if (textHeight + imageHeight > maxHeight) throw new RangeError('Image is too tall at full width. Choose a shorter image.');
     canvas.width = WIDTH;
     canvas.height = textHeight + imageHeight;
     ctx.fillStyle = 'white';

@@ -3,33 +3,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tinyfax</title>
-<h1>Tinyfax</h1>
-<details id="setup" open>
-<summary>Sender setup</summary>
-<p><label>Sender token <input id="token" type="password" autocomplete="off" spellcheck="false"></label></p>
-<p><button id="save-sender" type="button">Save sender credential</button></p>
-<button id="signer" type="button">Show browser public key</button>
-<p><output id="signing-key"></output></p>
-</details>
-<section aria-labelledby="compose-heading">
-<h2 id="compose-heading">Compose a print</h2>
-<p><label>Recipient <select id="recipient"></select></label></p>
-<p><label>Text <textarea id="text" maxlength="1024" rows="4"></textarea></label></p>
-<p><label>Image <input id="image" type="file" accept="image/*"></label></p>
-<p><canvas id="preview" aria-label="Monochrome print preview" hidden></canvas></p>
-<p><output id="raster-hash"></output></p>
-<p><button id="send-compose" type="button" disabled>Send print job</button></p>
-<p><output id="compose-status" aria-live="polite"></output></p>
-</section>
-<details>
-<summary>Transport diagnostics</summary>
-<button id="send" type="button">Send test message</button>
-<p><label><input type="checkbox" id="directory"> Use MQTT directory</label></p>
-<p><label>Receiver public key <input id="receiver-key" autocomplete="off" spellcheck="false"></label></p>
-<button id="secure-send" type="button">Send secure raster fixture</button>
-<p><output id="status" aria-live="polite"></output></p>
-</details>
-<script src="/mqtt.js" defer></script>
-<script src="/sender.js" type="module"></script>
-<script src="/composer.mjs" type="module"></script>
+<link rel="stylesheet" href="./workspace.css">
+<header><a href="#">Tinyfax</a><a href="#settings">Settings</a></header>
+<main id="workspace">
+<aside id="people"><h1>People</h1><div id="recipient"></div><button id="open-paper" hidden>Open paper</button><output id="people-status"></output></aside>
+<section id="paper"><button id="back" type="button">People</button><h1>Paper</h1>
+<label>Content <select id="mode"><option>Text</option><option>Image</option></select></label>
+<label id="text-field">Text <textarea id="text" maxlength="1024" rows="4"></textarea></label>
+<label id="image-field" hidden>Image <input id="image" type="file" accept="image/*"></label>
+<div class="preview"><canvas id="preview" aria-label="Monochrome print preview" hidden></canvas></div>
+<footer><span id="targets"></span><button id="send-compose" disabled>Send</button><output id="compose-status" aria-live="polite"></output></footer>
+</section></main>
+<section id="settings" hidden><h1>Settings</h1>
+<label>Sender token <input id="token" type="password" autocomplete="off" spellcheck="false"></label>
+<button id="save-sender">Save sender credential</button>
+<button id="signer">Show browser public key</button>
+<p><output id="signing-key"></output></p><output id="settings-status" aria-live="polite"></output>
+<a href="#">Back to workspace</a></section>
+<script src="./mqtt.js" defer></script>
+<script src="./composer.mjs" type="module"></script>
 </html>
