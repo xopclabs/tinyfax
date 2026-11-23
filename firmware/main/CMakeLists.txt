@@ -1,1 +1,1 @@
-idf_component_register(SRCS "main.c" PRIV_REQUIRES esp_driver_usb_serial_jtag esp_event esp_netif esp_wifi json mbedtls mqtt nvs_flash)
+idf_component_register(SRCS "main.c" "secure_job.c" "secure_receiver.c" "secure_directory.c" PRIV_REQUIRES esp_driver_usb_serial_jtag esp_event esp_netif esp_hw_support esp_timer esp_wifi json mbedtls mqtt nvs_flash)

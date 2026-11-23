@@ -5,6 +5,9 @@ const { join, dirname } = require('node:path');
 const assets = new Map([
     ['/', ['text/html; charset=utf-8', join(__dirname, 'index.html')]],
     ['/sender.js', ['text/javascript', join(__dirname, 'sender.js')]],
+    ['/composer.mjs', ['text/javascript', join(__dirname, 'composer.mjs')]],
+    ['/raster.mjs', ['text/javascript', join(__dirname, 'raster.mjs')]],
+    ['/secure-job.mjs', ['text/javascript', join(__dirname, 'secure-job.mjs')]],
     ['/mqtt.js', ['text/javascript', join(dirname(require.resolve('mqtt/package.json')), 'dist/mqtt.min.js')]],
 ]);
 

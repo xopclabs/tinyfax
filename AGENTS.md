@@ -13,5 +13,5 @@ Before drafting or revising user-facing prose for this project, read `~/.pi/agen
 
 1. **Design:** When starting a design discussion, suggest that the user run `/skill:grill-with-docs`. This skill requires manual invocation.
 2. **Specify:** Once the design is agreed, use OpenSpec to draft specs and tasks. If the project’s OpenSpec skills are not installed, tell the user rather than silently substituting an ad hoc task list.
-3. **Implement:** When asked to apply OpenSpec tasks, load and follow the `tdd` skill alongside the OpenSpec apply skill. Confirm test seams before writing tests. No separate TDD invocation is needed.
+3. **Implement:** When asked to apply OpenSpec tasks, load and follow the `tdd` skill alongside the OpenSpec apply skill. Confirm test seams before writing tests. No separate TDD invocation is needed. Continue implementing tasks until the change is complete or the next step requires user input.
 4. **Track progress:** Check off a step in the [roadmap](docs/roadmap.md) once its deliverable is complete and verified. Track implementation subtasks in OpenSpec.

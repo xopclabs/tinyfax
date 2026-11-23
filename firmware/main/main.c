@@ -9,12 +9,15 @@
 #include "esp_log.h"
 #include "esp_netif.h"
 #include "esp_netif_sntp.h"
+#include "esp_system.h"
 #include "esp_wifi.h"
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
 #include "mqtt_client.h"
 #include "mqtt5_client.h"
 #include "nvs_flash.h"
+#include "secure_receiver.h"
+#include "secure_directory.h"
 
 static const char *tag = "tinyfax";
 static const char *inbox = "tinyfax-test/inbox/bob/from/alice";
@@ -28,6 +31,7 @@ static void mqtt_event(void *arg, esp_event_base_t base, int32_t id, void *data)
     switch (id) {
     case MQTT_EVENT_CONNECTED:
         ESP_LOGI(tag, "MQTT connected");
+        tf_directory_connection(event->client);
         if (event->session_present) {
             ESP_LOGI(tag, "Inbox ready (session resumed)");
         } else {
@@ -39,7 +43,8 @@ static void mqtt_event(void *arg, esp_event_base_t base, int32_t id, void *data)
         }
         break;
     case MQTT_EVENT_SUBSCRIBED:
-        if (subscription_id == event->msg_id && event->data_len == 1 && event->data[0] == 1) {
+        if (subscription_id != event->msg_id) break;
+        if (event->data_len == 1 && event->data[0] == 1) {
             ESP_LOGI(tag, "Inbox ready (QoS 1 subscribed)");
         } else {
             ESP_LOGE(tag, "Inbox subscribe was not granted at QoS 1");
@@ -47,8 +52,15 @@ static void mqtt_event(void *arg, esp_event_base_t base, int32_t id, void *data)
         break;
     case MQTT_EVENT_DISCONNECTED:
         ESP_LOGI(tag, "MQTT disconnected");
+        tf_directory_connection(NULL);
         break;
     case MQTT_EVENT_DATA:
+        if (tf_directory_receive(event)) break;
+        if (event->current_data_offset == 0 && event->data_len == event->total_data_len &&
+            event->data_len >= 3 && !memcmp(event->data, "TFJ", 3) && !event->retain) {
+            tf_receiver_job((const uint8_t *)event->data, event->data_len);
+            break;
+        }
         if (event->current_data_offset == 0 && event->data_len == event->total_data_len &&
             event->data_len > 0 && event->data_len <= 128 && !event->retain) {
             const char *separator = memchr(event->data, ' ', event->data_len);
@@ -191,22 +203,34 @@ void app_main(void)
         .session.protocol_ver = MQTT_PROTOCOL_V_5,
         .session.disable_clean_session = true,
         .session.keepalive = 10,
+        .task.stack_size = 8192,
+        .buffer.size = 8192,
+        .network.timeout_ms = 5000,
+        .network.reconnect_timeout_ms = 3000,
     };
     esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt);
     ESP_ERROR_CHECK(client ? ESP_OK : ESP_ERR_NO_MEM);
     esp_mqtt5_connection_property_config_t session = {.session_expiry_interval = 600};
     ESP_ERROR_CHECK(esp_mqtt5_client_set_connect_property(client, &session));
     ESP_ERROR_CHECK(esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event, NULL));
+    tf_receiver_start();
+    tf_directory_init();
     ESP_ERROR_CHECK(esp_mqtt_client_start(client));
 
     // The bench console can interrupt Wi-Fi while the board stays powered.
     for (;;) {
         char command;
-        if (usb_serial_jtag_read_bytes(&command, 1, portMAX_DELAY) == 1 && command == '!') {
+        tf_directory_tick();
+        if (usb_serial_jtag_read_bytes(&command, 1, pdMS_TO_TICKS(100)) != 1) continue;
+        if (command == '~') {
+            esp_restart();
+        } else if (command == '!') {
             ESP_ERROR_CHECK(esp_wifi_stop());
             ESP_LOGI(tag, "Wi-Fi interruption started (40 seconds)");
             vTaskDelay(pdMS_TO_TICKS(40000));
             ESP_ERROR_CHECK(esp_wifi_start());
+        } else {
+            tf_receiver_console(command);
         }
     }
 }

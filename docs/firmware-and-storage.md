@@ -30,7 +30,7 @@ Relevant ESP-IDF mechanisms include `esp_https_ota()`, application OTA metadata 
 
 ## Flash and memory limits
 
-The target is a low-cost ESP32-S3 SuperMini, possibly a 4 MB flash part without PSRAM. A/B OTA, USB, Wi-Fi, MQTT/TLS, the local server, cryptography and print storage must all fit on the actual board. Two large app slots leave comparatively little file storage. No validated `partitions.csv`, firmware binary size or free-heap measurement exists in the supplied project state.
+The target is a low-cost ESP32-S3 SuperMini, possibly a 4 MB flash part without PSRAM. A/B OTA, USB, Wi-Fi, MQTT/TLS, the local server, cryptography and print storage must all fit on the actual board. Two large app slots leave comparatively little file storage. Partition sizing and free heap still need verification on the integrated appliance firmware.
 
 Receiving a long raster in bounded chunks is preferred over holding the whole image in internal RAM. PSRAM can simplify buffering but is not a functional requirement of the architecture. The print queue may rely partly on broker session storage; it still needs a bounded local lifecycle as defined in [print jobs](print-jobs.md).
 
