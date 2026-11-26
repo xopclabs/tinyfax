@@ -1,11 +1,11 @@
 export const MAX_RASTER = 4096;
 export const WIDTH = 256;
 
-export function packRaster(pixels, width, height) {
+export function packRaster(pixels, width, height, limit = MAX_RASTER) {
     const stride = Math.ceil(width / 8);
     const length = 4 + stride * height;
     if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1 ||
-        width > 65535 || height > 65535 || length > MAX_RASTER || pixels.length !== width * height * 4) {
+        width > 65535 || height > 65535 || length > limit || pixels.length !== width * height * 4) {
         throw new RangeError('Composition exceeds the raster limit. Shorten the text or choose a shorter image.');
     }
     const raster = new Uint8Array(length);

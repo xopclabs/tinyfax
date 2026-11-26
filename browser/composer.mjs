@@ -1,5 +1,5 @@
 import { encodeFixtureJob } from './secure-job.mjs';
-import { composeRaster, previewPixels } from './raster.mjs';
+import { mountEditor } from './editor.mjs';
 import { getSigningPair, requestResult } from './sender.js';
 
 const get = id => document.getElementById(id);
@@ -9,14 +9,21 @@ const signer = '03' + '00'.repeat(15);
 const fromHex = value => Uint8Array.from(value.match(/../g), pair => parseInt(pair, 16));
 const validId = value => typeof value === 'string' && /^[0-9a-f]{32}$/.test(value);
 const recipients = new Map();
-let credential, raster, revision = 0, sending = false;
+let credential, raster, sending = false;
 
 const selection = new Set();
 const narrow = matchMedia('(max-width: 799px)');
 let multi = false;
 function canSend() {
     get('send-compose').disabled = sending || !raster || !selection.size;
-    get('targets').textContent = [...selection].map(id => recipients.get(id).name).join(', ');
+    const chips = [...selection].map(id => {
+        const chip = document.createElement('span');
+        chip.textContent = recipients.get(id).name;
+        return chip;
+    });
+    get('targets').replaceChildren(...chips);
+    if (!chips.length) get('targets').textContent = 'Choose recipients';
+    get('send-compose').textContent = chips.length > 1 ? `Send to ${chips.length} printers` : 'Send';
     get('open-paper').hidden = !narrow.matches || !multi;
     get('open-paper').disabled = !selection.size;
     get('open-paper').textContent = `Open Paper for ${selection.size}`;
@@ -31,7 +38,13 @@ function openPaper() { get('workspace').classList.add('paper-open'); get('back')
 function personButton(id, name) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.textContent = name;
+    const avatar = document.createElement('span');
+    avatar.className = 'avatar';
+    avatar.setAttribute('aria-hidden', 'true');
+    avatar.textContent = [...name][0]?.toUpperCase() ?? '?';
+    const label = document.createElement('span');
+    label.textContent = name;
+    button.append(avatar, label);
     button.dataset.id = id;
     let timer, held = false, start;
     const cancel = () => clearTimeout(timer);
@@ -163,36 +176,6 @@ async function loadRecipients(secret) {
     }
 }
 
-async function updatePreview() {
-    const current = ++revision;
-    const preview = get('preview');
-    const status = get('compose-status');
-    raster = undefined;
-    preview.hidden = true;
-    canSend();
-    const text = get('text').value.trim();
-    const file = get('image').files[0];
-    if (!text && !file) return;
-    let image;
-    try {
-        if (file) image = await createImageBitmap(file);
-        const packed = composeRaster(text, image);
-        if (revision !== current) return;
-        const fields = new DataView(packed.buffer);
-        preview.width = fields.getUint16(0);
-        preview.height = fields.getUint16(2);
-        preview.getContext('2d').putImageData(new ImageData(previewPixels(packed), preview.width, preview.height), 0, 0);
-        preview.hidden = false;
-        raster = packed;
-        status.textContent = '';
-    } catch (error) {
-        if (revision === current) status.textContent = error.message;
-    } finally {
-        image?.close();
-        canSend();
-    }
-}
-
 get('save-sender').addEventListener('click', () => {
     const value = get('token').value.trim() || credential;
     if (value) void loadRecipients(value);
@@ -214,16 +197,7 @@ function route() {
 }
 window.addEventListener('hashchange', route);
 route();
-get('mode').addEventListener('change', () => {
-    const image = get('mode').value === 'Image';
-    get('text').value = get('image').value = '';
-    get('text-field').hidden = image;
-    get('image-field').hidden = !image;
-    get('compose-status').textContent = '';
-    void updatePreview();
-});
-get('text').addEventListener('input', updatePreview);
-get('image').addEventListener('change', updatePreview);
+mountEditor(bytes => { raster = bytes; canSend(); });
 get('send-compose').addEventListener('click', async () => {
     if (sending || !selection.size || !credential || !raster) return;
     const snapshot = [...selection].map(id => [id, recipients.get(id)]);

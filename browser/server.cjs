@@ -6,6 +6,8 @@ const assets = new Map([
     ['/', ['text/html; charset=utf-8', join(__dirname, 'index.html')]],
     ['/sender.js', ['text/javascript', join(__dirname, 'sender.js')]],
     ['/workspace.css', ['text/css', join(__dirname, 'workspace.css')]],
+    ['/editor.mjs', ['text/javascript', join(__dirname, 'editor.mjs')]],
+    ['/paper.mjs', ['text/javascript', join(__dirname, 'paper.mjs')]],
     ['/composer.mjs', ['text/javascript', join(__dirname, 'composer.mjs')]],
     ['/raster.mjs', ['text/javascript', join(__dirname, 'raster.mjs')]],
     ['/secure-job.mjs', ['text/javascript', join(__dirname, 'secure-job.mjs')]],

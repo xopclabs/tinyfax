@@ -4,22 +4,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tinyfax</title>
 <link rel="stylesheet" href="./workspace.css">
-<header><a href="#">Tinyfax</a><a href="#settings">Settings</a></header>
+<header><a href="#" class="logo">tinyfax</a><a href="#settings" class="icon" aria-label="Settings" title="Settings">⚙</a></header>
 <main id="workspace">
 <aside id="people"><h1>People</h1><div id="recipient"></div><button id="open-paper" hidden>Open paper</button><output id="people-status"></output></aside>
-<section id="paper"><button id="back" type="button">People</button><h1>Paper</h1>
-<label>Content <select id="mode"><option>Text</option><option>Image</option></select></label>
-<label id="text-field">Text <textarea id="text" maxlength="1024" rows="4"></textarea></label>
-<label id="image-field" hidden>Image <input id="image" type="file" accept="image/*"></label>
-<div class="preview"><canvas id="preview" aria-label="Monochrome print preview" hidden></canvas></div>
-<footer><span id="targets"></span><button id="send-compose" disabled>Send</button><output id="compose-status" aria-live="polite"></output></footer>
+<section id="paper" aria-label="Paper editor"><button id="back" type="button">‹ People</button>
+<div class="paper-head"><div><div class="recipient-caption">Recipients</div><div id="targets"></div></div><div class="history"><button id="undo" class="icon" aria-label="Undo" title="Undo" disabled>↶</button><button id="redo" class="icon" aria-label="Redo" title="Redo" disabled>↷</button></div></div>
+<div class="toolbar"><button id="add-text">Add Text</button> <button id="add-image">Add Image</button><input id="image" type="file" accept="image/*" hidden></div>
+<div class="editor-body"><div class="preview"><div id="strip"><canvas id="preview" aria-label="Monochrome print preview"></canvas><div id="elements"></div></div></div>
+<aside id="properties" aria-label="Element properties" hidden>
+<div class="inspector-head"><strong id="element-kind">Properties</strong><button id="close-properties" class="icon" aria-label="Close properties">×</button></div>
+<div class="inspector-fields">
+<div id="text-properties">
+<label>Text <textarea id="element-text" maxlength="1024" rows="3"></textarea></label>
+<label>Font <select id="font"><option>sans-serif</option><option>serif</option><option>monospace</option></select></label>
+<label>Size <input id="font-size" type="number" min="8" max="96"></label>
+<label>Color <input id="font-color" type="color"></label>
+<label>Alignment <select id="alignment"><option>left</option><option>center</option><option>right</option></select></label>
+</div>
+<label>Horizontal position <input id="element-x" type="number" min="0"></label>
+<label>Vertical position <input id="element-y" type="number" min="0"></label>
+<label>Width <input id="element-width" type="number" min="16"></label>
+<label id="height-field">Height <input id="element-height" type="number" min="16"></label>
+</div><div class="inspector-actions"><button id="remove-element">Remove</button></div></aside></div>
+<footer><output id="editor-status" aria-live="polite"></output><button id="export-png" disabled>Save PNG</button><button id="send-compose" disabled>Send</button><output id="compose-status" aria-live="polite"></output></footer>
 </section></main>
-<section id="settings" hidden><h1>Settings</h1>
+<section id="settings" hidden><div class="settings-inner"><a href="#">← Back to workspace</a><h1>Settings</h1><div class="settings-card"><h2>Sender setup</h2>
 <label>Sender token <input id="token" type="password" autocomplete="off" spellcheck="false"></label>
 <button id="save-sender">Save sender credential</button>
 <button id="signer">Show browser public key</button>
 <p><output id="signing-key"></output></p><output id="settings-status" aria-live="polite"></output>
-<a href="#">Back to workspace</a></section>
+</div></div></section>
 <script src="./mqtt.js" defer></script>
 <script src="./composer.mjs" type="module"></script>
 </html>
